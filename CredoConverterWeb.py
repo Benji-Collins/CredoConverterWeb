@@ -1,19 +1,20 @@
 #!/usr/bin/python
 import sys
 import requests
-from forex_python.converter import CurrencyRates
 
-c = CurrencyRates()
-eth_url = 'https://api.coinmarketcap.com/v1/ticker/ethereum/'
-response_eth = requests.get(eth_url)
+eth_url = 'https://api.btcmarkets.net/market/ETH/AUD/tick'
+headers = {
+    'User-Agent': 'CredoConverterWeb',
+    'From': 'collinsbenji13@gmail.com'
+}
+response_eth = requests.get(eth_url, headers=headers)
 eth_json = response_eth.json()
 
 credo_total = float(sys.argv[1])
 total_paid = float(sys.argv[2])
 credo_eth = float(sys.argv[3])
 
-eth_price_us = float(eth_json[0]['price_usd'])
-eth_price = float(c.convert('USD', 'AUD', eth_price_us)) # Change 'AUD' to any other supported currency if you wish.
+eth_price = float(eth_json['lastPrice'])
 credo_value_eth = float(credo_total * credo_eth)
 credo_value = float(credo_value_eth * eth_price)
 credo_price = (credo_eth * eth_price)
